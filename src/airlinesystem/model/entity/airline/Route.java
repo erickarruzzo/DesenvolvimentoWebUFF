@@ -12,6 +12,7 @@ public class Route
     private GregorianCalendar flightTime;
     private double priceFactor;//Should be multiplied by the weight of the Seat
     private Period duration;
+    private boolean available;
     
     public Route(String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime)
     { 
@@ -19,6 +20,7 @@ public class Route
       this.destiny = destiny;
       this.landTime = landTime;
       this.flightTime = flightTime;
+      this.available = true;
       //this.expectedFlightDuration = Period.between(flightTime, landTime);
     }
 
@@ -91,7 +93,18 @@ public class Route
     {
         this.duration = duration;
     }
-    
-    
-    
+
+    public boolean isAvailable() 
+    {
+        if (this.airplane.checkReleasedSeats() == null) 
+        {
+            this.available = false;
+        }
+        else
+        {
+            this.available = true;
+        }
+        
+        return available;
+    }
 }

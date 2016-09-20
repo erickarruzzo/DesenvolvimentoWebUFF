@@ -56,13 +56,15 @@ public class User implements UserOperations
     @Override
     public void viewAvailableRoutes(List<Route> routes){
         for (Route route : routes){
-            System.out.println("Avião " + route.getAirplane().toString());
-            System.out.println("Data do voo: " + route.getFlightTime());
-            System.out.println("Data do Pouso: " + route.getLandTime());
-            System.out.println("Origem: " + route.getOrigin());
-            System.out.println("Destino: " + route.getDestiny());
-            System.out.println("Duração: " + route.getDuration());
-            System.out.println("Fator: " + route.getPriceFactor());
+            if (route.isAvailable()){
+                System.out.println("Avião " + route.getAirplane().toString());
+                System.out.println("Data do voo: " + route.getFlightTime());
+                System.out.println("Data do Pouso: " + route.getLandTime());
+                System.out.println("Origem: " + route.getOrigin());
+                System.out.println("Destino: " + route.getDestiny());
+                System.out.println("Duração: " + route.getDuration());
+                System.out.println("Fator: " + route.getPriceFactor());
+            }   
         }
     }
     
