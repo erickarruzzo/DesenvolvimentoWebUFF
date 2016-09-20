@@ -1,14 +1,17 @@
 package airlinesystem.model.entity.user;
 
+import static airlinesystem.model.constants.Constants.DONT_FOUND_ORDER;
+import static airlinesystem.model.constants.Constants.SUCCESSFUL_SALE;
 import airlinesystem.model.entity.airline.Route;
 import airlinesystem.model.entity.airline.Ticket;
 import airlinesystem.model.entity.seat.Seat;
-import airlinesystem.model.operations.GeneralOperations;
+import airlinesystem.model.exception.LoginException;
+import airlinesystem.model.exception.PaymentException;
+import airlinesystem.model.operations.UserOperations;
 import airlinesystem.model.valueobject.Order;
-import java.util.ArrayList;
 import java.util.List;
 
-public class User implements GeneralOperations
+public class User implements UserOperations
 {
     private String username;
     private String password;
@@ -77,5 +80,45 @@ public class User implements GeneralOperations
     @Override
     public List<Seat> getAvailableSeats(Route route) {
         return route.getAirplane().checkReleasedSeats();
+    }
+
+    @Override
+    public void makePaymentOrderByNumber(int number, double valor) {
+        double totalPrice = 0;
+        for (Order order : this.orders)
+        {
+            if (order.getOrderNumber() == number) 
+            {
+                totalPrice = order.getTotalPrice();
+            }
+        }
+        if (totalPrice>0){
+            if (valor == totalPrice)
+            {
+                System.out.println(SUCCESSFUL_SALE);
+                //The order was saled
+            } 
+            else 
+            {
+                throw new PaymentException();
+                //The order wasn't saled
+            }
+        }
+        else
+        {
+            System.out.println(DONT_FOUND_ORDER);
+        }
+        
+    }
+
+    @Override
+    public boolean checkLogin(String username, String senha) {
+        //Verificar se username e senha estão contidos no BD
+        throw new LoginException();
+    }
+
+    @Override
+    public void makePaymentAllOrders(List<Order> orders) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

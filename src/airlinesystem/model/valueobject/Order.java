@@ -11,9 +11,13 @@ public class Order
     private double totalPrice;
     private User user;
     private Payment payment;
+    private int orderNumber;
+    private static int allOrderNumber = 0;
     
     public Order(List<Ticket> tickets, User user, Payment payment)
     {
+        allOrderNumber++;
+        this.orderNumber = allOrderNumber;
         this.tickets = tickets;
         this.user = user;
         this.payment = payment;
@@ -23,40 +27,55 @@ public class Order
     private double calcTotalPrice()
     {
         double total = 0;
-        for (Ticket ticket : this.tickets) {
+        for (Ticket ticket : this.tickets) 
+        {
             total += ticket.getPrice();
         }
         return total;
     }
 
-    public List<Ticket> getTickets() {
+    public List<Ticket> getTickets() 
+    {
         return tickets;
     }
 
-    public void setTickets(List<Ticket> tickets) {
+    public void setTickets(List<Ticket> tickets) 
+    {
         this.tickets = tickets;
     }
 
-    public double getTotalPrice() {
+    public double getTotalPrice() 
+    {
         return totalPrice;
     }
 
-    public User getUser() {
+    public User getUser()
+    {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(User user)
+    {
         this.user = user;
     }
 
-    public Payment getPayment() {
+    public Payment getPayment() 
+    {
         return payment;
     }
 
-    public void setPayment(Payment payment) {
+    public void setPayment(Payment payment) 
+    {
         this.payment = payment;
+    } 
+
+    public int getOrderNumber() 
+    {
+        return orderNumber;
     }
-    
-    
-    
+
+    public void setOrderNumber(int orderNumber)
+    {
+        this.orderNumber = orderNumber;
+    }
 }
