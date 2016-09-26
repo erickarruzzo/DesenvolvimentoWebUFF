@@ -1,6 +1,6 @@
 package airlinesystem.model.valueobject;
 
-import airlinesystem.model.valueobject.enums.Payment;
+import airlinesystem.model.entity.payment.Payment;
 import airlinesystem.model.entity.airline.Ticket;
 import airlinesystem.model.entity.user.User;
 import java.util.List;
