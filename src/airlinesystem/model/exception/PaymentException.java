@@ -1,13 +1,15 @@
 package airlinesystem.model.exception;
 
-import static airlinesystem.model.constants.Constants.ERROR_PAYMENT;
 
-
-public class PaymentException extends RuntimeException{
+public abstract class PaymentException extends RuntimeException{
     private static final long serialVersionUID = 1209874521536603615L;
 
-    public PaymentException() 
+    /**
+     *
+     * @param message
+     */
+    public PaymentException(String message) 
     {
-        System.out.println(ERROR_PAYMENT);
+        super(message);
     }
 }

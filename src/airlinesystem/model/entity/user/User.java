@@ -1,15 +1,13 @@
 package airlinesystem.model.entity.user;
 
-import static airlinesystem.model.constants.Constants.DONT_FOUND_ORDER;
 import static airlinesystem.model.constants.Constants.SUCCESSFUL_SALE;
 import airlinesystem.model.entity.airline.Route;
 import airlinesystem.model.entity.airline.Ticket;
 import airlinesystem.model.entity.seat.Seat;
-import airlinesystem.model.exception.LoginException;
-import airlinesystem.model.exception.PaymentException;
 import airlinesystem.model.operations.UserOperations;
 import airlinesystem.model.valueobject.Order;
 import java.util.List;
+import static airlinesystem.model.constants.Constants.ORDER_NOT_FOUND;
 
 public class User implements UserOperations
 {
@@ -94,21 +92,23 @@ public class User implements UserOperations
                 totalPrice = order.getTotalPrice();
             }
         }
-        if (totalPrice>0){
+        if (totalPrice>0)
+        {
             if (valor == totalPrice)
             {
                 System.out.println(SUCCESSFUL_SALE);
-                //The order was saled
+                //The order was sold
             } 
             else 
             {
-                throw new PaymentException();
-                //The order wasn't saled
+                //TODO so quem joga a excecao de payment eh a propria classe payment (ou seus herdeiros)
+                //throw new PaymentException();
+                //The order wasn't sold
             }
         }
         else
         {
-            System.out.println(DONT_FOUND_ORDER);
+            System.out.println(ORDER_NOT_FOUND);
         }
         
     }
@@ -116,7 +116,11 @@ public class User implements UserOperations
     @Override
     public boolean checkLogin(String username, String senha) {
         //Verificar se username e senha estão contidos no BD
-        throw new LoginException();
+        
+
+        //TODO so quem joga a excecao de login eh a classe de login
+        //throw new LoginException();
+        return true;
     }
 
     @Override

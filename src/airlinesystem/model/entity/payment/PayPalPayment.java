@@ -5,6 +5,8 @@
  */
 package airlinesystem.model.entity.payment;
 
+import java.util.List;
+
 /**
  *
  * @author Henrique
@@ -21,6 +23,9 @@ public class PayPalPayment extends Payment
      */
     @Override
     public void makePayment() {
+        
+        List<List<Character>> grid;
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
