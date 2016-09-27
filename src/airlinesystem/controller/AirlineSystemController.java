@@ -16,7 +16,8 @@ public class AirlineSystemController {
            
         boolean exit = false;
         
-        Scanner scanner = new Scanner(System. in); 
+        Scanner scanner; 
+        scanner = new Scanner(System.in);
         
         System.out.println("Iniciando o sistema de companhia aerea...");
         
@@ -38,20 +39,37 @@ public class AirlineSystemController {
                 {
                     for (Route route : routes)
                     {
+                        System.out.println("Origem");
+                        System.out.println(route.getOrigin());
+                        
+                        System.out.println("Destino");
+                        System.out.println(route.getDestiny());
+                        
+                        System.out.println("Data");
+                        System.out.println(route.getDate());
                         System.out.println("Aterrisagem");
-                        System.out.println("Data");
-                        System.out.println("Pouso");
-                        System.out.println("Data");
-                        System.out.println("Duracao");
+                        System.out.println(route.getLandTime());
+                        System.out.println("Embarque");
+                        System.out.println(route.getFlightTime());
+                        
+                        System.out.println("Aeronave");
+//                        System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
+                        
+                        //System.out.println("Duracao");
                         
                     }
+                    break;
                 }
                 case "6":
                 {
                     System.out.println("Saindo do sistema...");
                     exit = true;
+                    break;
                 }
-                default: System.out.println("Escolha uma opcao valida");
+                default: 
+                {    System.out.println("Escolha uma opcao valida");
+                     break;
+                }
             }
         }
         while(exit != true);

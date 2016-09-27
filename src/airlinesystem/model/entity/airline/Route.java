@@ -1,6 +1,7 @@
 package airlinesystem.model.entity.airline;
 
 import java.time.Period;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Route 
@@ -13,14 +14,16 @@ public class Route
     private double priceFactor;//Should be multiplied by the weight of the Seat
     private Period duration;
     private boolean available;
+    private Date date;
     
-    public Route(String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime)
+    public Route(String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime, Date date)
     { 
       this.origin = origin;
       this.destiny = destiny;
       this.landTime = landTime;
       this.flightTime = flightTime;
       this.available = true;
+      this.date = date;
       //this.expectedFlightDuration = Period.between(flightTime, landTime);
     }
 
@@ -92,6 +95,16 @@ public class Route
     public void setDuration(Period duration) 
     {
         this.duration = duration;
+    }
+    
+    public void setDate(Date date)
+    {
+        this.date = date;
+    }
+    
+    public Date getDate()
+    {
+        return this.date;
     }
 
     public boolean isAvailable() 
