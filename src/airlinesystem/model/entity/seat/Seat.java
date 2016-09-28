@@ -7,14 +7,16 @@ public class Seat
     private String airplaneClass;
     private String airplaneSeat;
     private SeatCategory category;
-    private boolean occupiedSeat; //Estado do assento
+    // O estado do assento nao eh identificado na classe
+    // E sim em um voo especifico. Classe RouteFlight eh encarregado disso
+    //private boolean occupiedSeat; //Estado do assento
     
     public Seat(String airplaneClass, String airplaneSeat, SeatCategory category)
     {
         this.airplaneClass = airplaneClass;
         this.airplaneSeat = airplaneSeat;
         this.category = category;
-        this.occupiedSeat = false;
+        //this.occupiedSeat = false;
     }
 
     public String getAirplaneClass() 
@@ -47,13 +49,13 @@ public class Seat
         this.category = category;
     }
 
-    public boolean isOccupiedSeat() 
-    {
-        return occupiedSeat;
-    }
-
-    public void setOccupiedSeat(boolean occupedSeat) 
-    {
-        this.occupiedSeat = occupedSeat;
-    }    
+//    public boolean isOccupiedSeat() 
+//    {
+//        return occupiedSeat;
+//    }
+//
+//    public void setOccupiedSeat(boolean occupedSeat) 
+//    {
+//        this.occupiedSeat = occupedSeat;
+//    }    
 }

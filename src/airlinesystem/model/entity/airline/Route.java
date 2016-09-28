@@ -1,11 +1,11 @@
 package airlinesystem.model.entity.airline;
 
 import java.time.Period;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Route 
 {
+    private int routeId;
     private Airplane airplane;
     private String origin; //can become class airport
     private String destiny;
@@ -14,16 +14,16 @@ public class Route
     private double priceFactor;//Should be multiplied by the weight of the Seat
     private Period duration;
     private boolean available;
-    private Date date;
     
-    public Route(String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime, Date date)
+    public Route(int routeId, String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime, Airplane airplane)
     { 
+      this.routeId = routeId;
       this.origin = origin;
       this.destiny = destiny;
       this.landTime = landTime;
       this.flightTime = flightTime;
       this.available = true;
-      this.date = date;
+      this.airplane = airplane;
       //this.expectedFlightDuration = Period.between(flightTime, landTime);
     }
 
@@ -96,28 +96,18 @@ public class Route
     {
         this.duration = duration;
     }
-    
-    public void setDate(Date date)
-    {
-        this.date = date;
-    }
-    
-    public Date getDate()
-    {
-        return this.date;
-    }
 
-    public boolean isAvailable() 
-    {
-        if (this.airplane.checkReleasedSeats() == null) 
-        {
-            this.available = false;
-        }
-        else
-        {
-            this.available = true;
-        }
-        
-        return available;
-    }
+//    public boolean isAvailable() 
+//    {
+//        if (this.airplane.checkAvailableSeats() == null) 
+//        {
+//            this.available = false;
+//        }
+//        else
+//        {
+//            this.available = true;
+//        }
+//        
+//        return available;
+//    }
 }

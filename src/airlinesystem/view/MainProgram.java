@@ -5,6 +5,6 @@ import airlinesystem.controller.AirlineSystemController;
 public class MainProgram {
     public static void main(String[] args) {
 		AirlineSystemController generalController = new AirlineSystemController();
-		generalController.startPrincipalScreen();
+		generalController.startMainScreen();
     }
 }
