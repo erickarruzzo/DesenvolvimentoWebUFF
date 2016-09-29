@@ -96,6 +96,16 @@ public class Route
     {
         this.duration = duration;
     }
+    
+    public void setRouteId( int routeId )
+    {
+        this.routeId = routeId;
+    }
+    
+    public int getRouteId()
+    {
+        return this.routeId;
+    }
 
 //    public boolean isAvailable() 
 //    {

@@ -77,7 +77,7 @@ public class AirlineSystemController
         }
     }
 
-    public void startMainScreen() 
+    public void initMainScreen() 
     {
         // TODO code application logic here
         List<Route> routes; 
@@ -109,29 +109,49 @@ public class AirlineSystemController
                 {
                     for (Route route : routes)
                     {
-                        System.out.print("Origem");
+                        System.out.print("Numero do voo ");
+                        System.out.println(route.getRouteId());
+                        
+                        System.out.print("Origem ");
                         System.out.println(route.getOrigin());
                         
-                        System.out.print("Destino");
+                        System.out.print("Destino ");
                         System.out.println(route.getDestiny());
                         
-                        System.out.print("Data de Embarque");
+                        System.out.print("Data de Embarque ");
                         System.out.println(route.getFlightTime());
                         
-                        System.out.print("Aterrisagem");
+                        System.out.print("Aterrisagem ");
                         System.out.println(route.getLandTime());
                         
-                        System.out.print("Aeronave");
-//                        System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
+                        System.out.print("Aeronave ");
+                        System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
                         
                         //System.out.println("Duracao");
                         
                     }
                     break;
                 }
+                case "2":
+                {
+                    String origin;
+                    String destiny;
+                    
+                    System.out.println("Digite a origem");
+                    origin = scanner.nextLine();
+                    
+                    System.out.println("Digite o destino");
+                    destiny = scanner.nextLine();
+                    
+                    List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,routes);
+                    
+                    //Exibir voos (que podem ser conjuntos de rotas)
+                    
+                    break;
+                }
                 case "3":
                 {
-                    
+                    break;
                 }
                 case "7":
                 {

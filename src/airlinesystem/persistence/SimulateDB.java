@@ -10,6 +10,14 @@ import java.util.List;
 
 public class SimulateDB {
     
+    public static List<List<Route>> getFlights(String origin, String destiny, List<Route> routes)
+    {
+        List<List<Route>> flights = null;
+        
+        
+        return flights;
+    }
+    
     public static List<Route> startRoutes() 
     {
         List<Route> routes = new ArrayList<>();
