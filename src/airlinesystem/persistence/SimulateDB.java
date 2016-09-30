@@ -10,10 +10,38 @@ import java.util.List;
 
 public class SimulateDB {
     
-    public static List<List<Route>> getFlights(String origin, String destiny, List<Route> routes)
+    public static List<List<Route>> getFlights(String origin, String destiny, String day, boolean conexao, int tempoMax, List<Route> routes)
     {
-        List<List<Route>> flights = null;
+        List<List<Route>> flights;
+        flights = new ArrayList<>();
         
+        for (Route route : routes)
+        {
+            String routeDestiny = route.getDestiny();
+            String routeOrigin = route.getOrigin();
+            GregorianCalendar routeDayCalendar = route.getFlightTime();
+            
+            //transformar gregorianCalendar no formato dd/MM/YYYY
+            //day estara nesse formato
+            String routeDay = routeDayCalendar.toString();
+            
+            if (routeOrigin.equals(origin) && routeDay.equals(day))
+            {
+                if (routeDestiny.equals(destiny))
+                {
+                    List<Route> flight = new ArrayList<Route>();
+                    flight.add(route);
+                    flights.add(flight);
+                }
+                //verifica se ha outra rota que o leve ao local pretendido
+                else if (conexao)
+                {
+                    //tempo maximo de espera entre conexoes
+                    //fazer logica para buscar mais de uma conexao
+                    //talvez algoritmo recursivo
+                }
+            }
+        }
         
         return flights;
     }

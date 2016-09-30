@@ -136,6 +136,9 @@ public class AirlineSystemController
                 {
                     String origin;
                     String destiny;
+                    String day;
+                    boolean conexao;
+                    int tempoMax = 0;
                     
                     System.out.println("Digite a origem");
                     origin = scanner.nextLine();
@@ -143,7 +146,19 @@ public class AirlineSystemController
                     System.out.println("Digite o destino");
                     destiny = scanner.nextLine();
                     
-                    List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,routes);
+                    System.out.println("Digite o dia pretendido do voo");
+                    day = scanner.nextLine();
+                    
+                    System.out.println("Considerar conexoes? s/n");
+                    conexao = scanner.nextLine().equals("s") ?  true : false;
+                    
+                    if (conexao)
+                    {
+                        System.out.println("Entre com o tempo maximo de espera em cada conexao");
+                        tempoMax = Integer.getInteger(scanner.nextLine());
+                    }
+                    
+                    List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,day,conexao,tempoMax,routes);
                     
                     //Exibir voos (que podem ser conjuntos de rotas)
                     
