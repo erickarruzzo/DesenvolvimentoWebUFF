@@ -1,6 +1,9 @@
 package airlinesystem.controller;
 
+import airlinesystem.login.Login;
 import airlinesystem.model.entity.airline.Route;
+import airlinesystem.model.exception.WrongPasswordException;
+import airlinesystem.model.exception.WrongUsernameException;
 import airlinesystem.persistence.SimulateDB;
 import java.util.List;
 import java.util.Scanner;
@@ -24,12 +27,10 @@ public class AirlineSystemController
             {
                 case "1":
                 {
-                    validateLogin();
+                    validateLogin(scanner);
                 }
                 case "2":
                 {
-                    System.out.println("Entre com seu email");
-                    String email = scanner.nextLine();
                     System.out.println("Entre com seu username");
                     String username = scanner.nextLine();
                     System.out.println("Entre com sua senha");
@@ -49,44 +50,62 @@ public class AirlineSystemController
         while(exit == false);
     }
     
-    public void validateLogin()
-    {
-        Scanner scanner = new Scanner(System.in);
-        
+    public void validateLogin(Scanner scanner)
+    { 
         String username;
         String password;
+        
+        boolean authenticated = false;
         
         System.out.println("Entre com seu nome de usuario");
         username = scanner.nextLine();
         System.out.println("Entre com sua senha");
         password = scanner.nextLine();
         
-        if ((username != null &&  username.equals("")) || (password != null && password.equals("")))
+        while (!authenticated)
         {
-            System.out.println("Campo vazio");
-        }
-        else if ( SimulateDB.validateLogin(username, password) )
-        {
-            System.out.println("Login efetuado com sucesso");
-        }
-        else
-        {
-            System.out.println("Falha no Login");
-            //TODO switch case para verificar se deseja retornar a tela inicial ou 
-            validateLogin();
+            try
+            {
+                Login.authenticate(username, password);
+                authenticated = true;
+            }
+            catch(WrongPasswordException | WrongUsernameException e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
     }
+    
+    public static void showRoute(Route route)
+    {
+        System.out.print("Numero do voo ");
+        System.out.println(route.getRouteId());
 
-    public void initMainScreen() 
+        System.out.print("Origem ");
+        System.out.println(route.getOrigin());
+
+        System.out.print("Destino ");
+        System.out.println(route.getDestiny());
+
+        System.out.print("Data de Embarque ");
+        System.out.println(route.getFlightTime());
+
+        System.out.print("Aterrisagem ");
+        System.out.println(route.getLandTime());
+
+        System.out.print("Aeronave ");
+        System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
+    }
+
+    public void initMainScreen(Scanner scanner) 
     {
         // TODO code application logic here
         List<Route> routes; 
         
-        routes = SimulateDB.startRoutes();
+        routes = SimulateDB.retrieveRoutes();
            
         boolean exit = false;
         String input;
-        Scanner scanner = new Scanner(System.in);
         
         System.out.println("Iniciando o sistema de companhia aerea...");
         
@@ -109,63 +128,26 @@ public class AirlineSystemController
                 {
                     for (Route route : routes)
                     {
-                        System.out.print("Numero do voo ");
-                        System.out.println(route.getRouteId());
-                        
-                        System.out.print("Origem ");
-                        System.out.println(route.getOrigin());
-                        
-                        System.out.print("Destino ");
-                        System.out.println(route.getDestiny());
-                        
-                        System.out.print("Data de Embarque ");
-                        System.out.println(route.getFlightTime());
-                        
-                        System.out.print("Aterrisagem ");
-                        System.out.println(route.getLandTime());
-                        
-                        System.out.print("Aeronave ");
-                        System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
-                        
+                        showRoute(route);
                         //System.out.println("Duracao");
-                        
                     }
                     break;
                 }
                 case "2":
                 {
-                    String origin;
-                    String destiny;
-                    String day;
-                    boolean conexao;
-                    int tempoMax = 0;
-                    
-                    System.out.println("Digite a origem");
-                    origin = scanner.nextLine();
-                    
-                    System.out.println("Digite o destino");
-                    destiny = scanner.nextLine();
-                    
-                    System.out.println("Digite o dia pretendido do voo");
-                    day = scanner.nextLine();
-                    
-                    System.out.println("Considerar conexoes? s/n");
-                    conexao = scanner.nextLine().equals("s") ?  true : false;
-                    
-                    if (conexao)
+                    searchFlight(scanner, routes);
+                    System.out.println("Voce deseja adquirir algum voo?");
+                    boolean resp = scanner.nextLine().equals("s") ? true : false;
+                    if(resp)
                     {
-                        System.out.println("Entre com o tempo maximo de espera em cada conexao");
-                        tempoMax = Integer.getInteger(scanner.nextLine());
+                        //chama metodo que compra
                     }
-                    
-                    List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,day,conexao,tempoMax,routes);
-                    
-                    //Exibir voos (que podem ser conjuntos de rotas)
-                    
                     break;
                 }
                 case "3":
                 {
+                    searchFlight(scanner,routes);
+                    //metodo que compra
                     break;
                 }
                 case "7":
@@ -182,5 +164,53 @@ public class AirlineSystemController
         }
         while(exit != true);
     }    
-}
 
+    private void searchFlight(Scanner scanner, List<Route> routes) {
+        String origin;
+        String destiny;
+        String date;
+        boolean conexao;
+        int tempoMax = 0;
+        
+        System.out.println("Digite a origem");
+        origin = scanner.nextLine();
+        
+        System.out.println("Digite o destino");
+        destiny = scanner.nextLine();
+        
+        System.out.println("Digite o data pretendido do voo");
+        date = scanner.nextLine();
+        
+        System.out.println("Considerar conexoes? s/n");
+        conexao = scanner.nextLine().equals("s") ?  true : false;
+        
+        if (conexao)
+        {
+            System.out.println("Entre com o tempo maximo de espera em cada conexao (em horas)");
+            //nextInt method does not consume the last newline character of your input
+            //http://stackoverflow.com/questions/13102045/scanner-is-skipping-nextline-after-using-next-nextint-or-other-nextfoo
+            //tempoMax = scanner.nextInt();
+            try
+            {
+                tempoMax = Integer.parseInt(scanner.nextLine());
+            }
+            catch (NumberFormatException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        
+        List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,date,conexao,tempoMax,routes);
+        
+        //Exibir voos (que podem ser conjuntos de rotas)
+        int index = 0;
+        for (List<Route> listRoute : flights)
+        {
+            System.out.println("Opcao "+index);
+            for(Route route : listRoute)
+            {
+                showRoute(route);
+            }
+        }
+    }
+}

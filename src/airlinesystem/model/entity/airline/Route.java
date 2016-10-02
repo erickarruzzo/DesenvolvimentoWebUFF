@@ -15,7 +15,7 @@ public class Route
     private Period duration;
     private boolean available;
     
-    public Route(int routeId, String origin, String destiny, GregorianCalendar landTime, GregorianCalendar flightTime, Airplane airplane)
+    public Route(int routeId, String origin, String destiny, GregorianCalendar flightTime, GregorianCalendar landTime, Airplane airplane)
     { 
       this.routeId = routeId;
       this.origin = origin;
