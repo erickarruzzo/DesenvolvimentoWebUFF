@@ -2,6 +2,7 @@ package airlinesystem.controller;
 
 import airlinesystem.login.Login;
 import airlinesystem.model.entity.airline.Route;
+import airlinesystem.model.exception.ExistantUsernameException;
 import airlinesystem.model.exception.WrongPasswordException;
 import airlinesystem.model.exception.WrongUsernameException;
 import airlinesystem.persistence.SimulateDB;
@@ -21,24 +22,33 @@ public class AirlineSystemController
             System.out.println("Selecione a opcao desejada");
             System.out.println("1 - Realizar login");
             System.out.println("2 - Criar uma conta");
+            System.out.println("3 - Sair do sistema");
             input = scanner.nextLine();
             
             switch(input)
             {
                 case "1":
                 {
-                    validateLogin(scanner);
+                    if(validateLogin(scanner))
+                    {
+                        System.out.println("Login realizado com sucesso");
+                        initMainScreen(scanner);
+                    }
+                    break;
                 }
                 case "2":
                 {
-                    System.out.println("Entre com seu username");
-                    String username = scanner.nextLine();
-                    System.out.println("Entre com sua senha");
-                    String password = scanner.nextLine();
-                    
-                    //TODO metodo para salvar conta no simulateDB
-                    
+                    if(createAccount(scanner))
+                    {
+                        System.out.println("Conta criada com sucesso");
+                        initMainScreen(scanner);
+                    }
                     break;
+                }
+                case "3":
+                {
+                    System.out.println("Saindo do sistema...");
+                    exit = true;
                 }
                 default: 
                 {    System.out.println("Escolha uma opcao valida");
@@ -50,7 +60,7 @@ public class AirlineSystemController
         while(exit == false);
     }
     
-    public void validateLogin(Scanner scanner)
+    public boolean validateLogin(Scanner scanner)
     { 
         String username;
         String password;
@@ -62,18 +72,36 @@ public class AirlineSystemController
         System.out.println("Entre com sua senha");
         password = scanner.nextLine();
         
-        while (!authenticated)
+        try
         {
-            try
-            {
-                Login.authenticate(username, password);
-                authenticated = true;
-            }
-            catch(WrongPasswordException | WrongUsernameException e)
-            {
-                System.out.println(e.getMessage());
-            }
+            authenticated = Login.authenticate(username, password);
         }
+        catch(WrongPasswordException | WrongUsernameException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return authenticated;
+    }
+    
+    public boolean createAccount(Scanner scanner)
+    {
+        System.out.println("Entre com seu username");
+        String username = scanner.nextLine();
+        System.out.println("Entre com sua senha");
+        String password = scanner.nextLine();
+        
+        boolean created = false;
+        
+        try
+        {
+            SimulateDB.createAccount(username, password);
+            created = true;
+        }
+        catch (ExistantUsernameException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return created;
     }
     
     public static void showRoute(Route route)
@@ -99,7 +127,6 @@ public class AirlineSystemController
 
     public void initMainScreen(Scanner scanner) 
     {
-        // TODO code application logic here
         List<Route> routes; 
         
         routes = SimulateDB.retrieveRoutes();
@@ -152,7 +179,7 @@ public class AirlineSystemController
                 }
                 case "7":
                 {
-                    System.out.println("Saindo do sistema...");
+                    System.out.println("Realizando o logout...");
                     exit = true;
                     break;
                 }

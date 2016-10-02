@@ -4,6 +4,7 @@ import airlinesystem.model.entity.airline.Airplane;
 import airlinesystem.model.entity.airline.Route;
 import airlinesystem.model.entity.seat.Seat;
 import airlinesystem.model.entity.user.User;
+import airlinesystem.model.exception.ExistantUsernameException;
 import airlinesystem.model.valueobject.enums.SeatCategory;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -11,6 +12,8 @@ import java.util.List;
 
 public class SimulateDB 
 {
+    
+    public static List<User> users = new ArrayList<User>();
     
     public static List<List<Route>> getFlights(String origin, String destiny, String date, boolean conexao, int tempoMax, List<Route> routes)
     {
@@ -47,7 +50,7 @@ public class SimulateDB
                     //tempo maximo de espera entre conexoes
                     //fazer logica para buscar mais de uma conexao
                     //List<List<Route>> conexionRoutes = getConexionFlights(routeDestiny,destiny,route.getLandTime(),tempoMax,routes);
-                    //a logica abaixo so pegara um conexao no maximo
+                    //a logica abaixo so pegara uma conexao no maximo
                     for (Route connectionRoute : routes)
                     {
                         String secRouteOrigin = connectionRoute.getOrigin();
@@ -113,21 +116,29 @@ public class SimulateDB
         routes.add(new Route(3,"Charlotte","Boston",new GregorianCalendar(2016,10,16,9,30),new GregorianCalendar(2016,10,16,12,30),airplanes.get(0)));
 
         return routes;
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public static List<User> retrieveUsers()
-    {
-        List<User> users = new ArrayList<User>();
-        
-        users.add(new User(1,"rodrigo","vasco"));
-        users.add(new User(2,"erick","fechacomfreixo"));
-        
+    {   
+        if(users.isEmpty())
+        {
+            users.add(new User(1,"rodrigo","vasco"));
+            users.add(new User(2,"erick","fechacomfreixo"));
+        }
         return users;
     }
     
     public static void createAccount(String username, String password)
     {
-        
+        List<User> usersList = retrieveUsers();
+        for (User user : usersList)
+        {
+            if(user.getUsername().equals(username))
+            {
+                throw new ExistantUsernameException();
+                
+            }
+        }
+        usersList.add(new User(usersList.size(),username,password));
     }
 }
