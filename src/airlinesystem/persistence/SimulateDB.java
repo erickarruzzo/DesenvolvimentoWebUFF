@@ -128,7 +128,7 @@ public class SimulateDB
         return users;
     }
     
-    public static void createAccount(String username, String password)
+    public static User createAccount(String username, String password)
     {
         List<User> usersList = retrieveUsers();
         for (User user : usersList)
@@ -139,6 +139,8 @@ public class SimulateDB
                 
             }
         }
-        usersList.add(new User(usersList.size(),username,password));
+        User newUser = new User(usersList.size(),username,password);
+        usersList.add(newUser);
+        return newUser;
     }
 }

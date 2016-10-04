@@ -9,6 +9,7 @@ import airlinesystem.model.entity.user.User;
 import airlinesystem.model.exception.WrongPasswordException;
 import airlinesystem.model.exception.WrongUsernameException;
 import airlinesystem.persistence.SimulateDB;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,24 +18,39 @@ import java.util.List;
  */
 public class Login 
 {
-    public static boolean authenticate(String username, String password)
+    private String username;
+    private String password;
+    private Date time;
+    private boolean failed;
+    
+    public Login(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
+        this.time = new Date();
+    }
+    
+    public User authenticate()
     {
         List<User> userList = SimulateDB.retrieveUsers();
         
         for(User user : userList)
         {
-            if(user.getUsername().equals(username))
+            if(user.getUsername().equals(this.username))
             {
-                if(user.getPassword().equals(password))
+                if(user.getPassword().equals(this.password))
                 {
-                    return true;
+                    this.failed = false;
+                    return user;
                 }
                 else
                 {
+                    this.failed = false;
                     throw new WrongPasswordException();
                 }
             }
         }
+        this.failed = false;
         throw new WrongUsernameException();
     }
 }

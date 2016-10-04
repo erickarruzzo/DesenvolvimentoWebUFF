@@ -1,8 +1,13 @@
 package airlinesystem.controller;
 
 import airlinesystem.login.Login;
+import airlinesystem.model.entity.airline.Flight;
 import airlinesystem.model.entity.airline.Route;
+import airlinesystem.model.entity.airline.RouteFlight;
+import airlinesystem.model.entity.seat.Seat;
+import airlinesystem.model.entity.user.User;
 import airlinesystem.model.exception.ExistantUsernameException;
+import airlinesystem.model.exception.InvalidFlightOptionException;
 import airlinesystem.model.exception.WrongPasswordException;
 import airlinesystem.model.exception.WrongUsernameException;
 import airlinesystem.persistence.SimulateDB;
@@ -29,19 +34,29 @@ public class AirlineSystemController
             {
                 case "1":
                 {
-                    if(validateLogin(scanner))
+                    try
                     {
+                        User user = validateLogin(scanner);
                         System.out.println("Login realizado com sucesso");
-                        initMainScreen(scanner);
+                        initMainScreen(scanner,user);
+                    }
+                    catch(WrongPasswordException | WrongUsernameException e)
+                    {
+                        System.out.println(e.getMessage());
                     }
                     break;
                 }
                 case "2":
                 {
-                    if(createAccount(scanner))
+                    try
                     {
+                        User user = createAccount(scanner);
                         System.out.println("Conta criada com sucesso");
-                        initMainScreen(scanner);
+                        initMainScreen(scanner, user);
+                    }
+                    catch (ExistantUsernameException e)
+                    {
+                        System.out.println(e.getMessage());
                     }
                     break;
                 }
@@ -49,6 +64,7 @@ public class AirlineSystemController
                 {
                     System.out.println("Saindo do sistema...");
                     exit = true;
+                    break;
                 }
                 default: 
                 {    System.out.println("Escolha uma opcao valida");
@@ -60,48 +76,29 @@ public class AirlineSystemController
         while(exit == false);
     }
     
-    public boolean validateLogin(Scanner scanner)
+    public User validateLogin(Scanner scanner)
     { 
         String username;
         String password;
-        
-        boolean authenticated = false;
         
         System.out.println("Entre com seu nome de usuario");
         username = scanner.nextLine();
         System.out.println("Entre com sua senha");
         password = scanner.nextLine();
         
-        try
-        {
-            authenticated = Login.authenticate(username, password);
-        }
-        catch(WrongPasswordException | WrongUsernameException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return authenticated;
+        Login login = new Login(username, password);
+        
+        return login.authenticate();
     }
     
-    public boolean createAccount(Scanner scanner)
+    public User createAccount(Scanner scanner)
     {
         System.out.println("Entre com seu username");
         String username = scanner.nextLine();
         System.out.println("Entre com sua senha");
         String password = scanner.nextLine();
         
-        boolean created = false;
-        
-        try
-        {
-            SimulateDB.createAccount(username, password);
-            created = true;
-        }
-        catch (ExistantUsernameException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return created;
+        return SimulateDB.createAccount(username, password);
     }
     
     public static void showRoute(Route route)
@@ -125,7 +122,7 @@ public class AirlineSystemController
         System.out.println( route.getAirplane().getCompany() + " " + route.getAirplane().getModel());
     }
 
-    public void initMainScreen(Scanner scanner) 
+    public void initMainScreen(Scanner scanner, User user) 
     {
         List<Route> routes; 
         
@@ -156,25 +153,26 @@ public class AirlineSystemController
                     for (Route route : routes)
                     {
                         showRoute(route);
-                        //System.out.println("Duracao");
                     }
                     break;
                 }
                 case "2":
                 {
-                    searchFlight(scanner, routes);
+                    List<List<Route>> flights = searchFlight(scanner, routes);
                     System.out.println("Voce deseja adquirir algum voo?");
                     boolean resp = scanner.nextLine().equals("s") ? true : false;
                     if(resp)
                     {
                         //chama metodo que compra
+                        buyFlight(scanner, flights, user);
                     }
                     break;
                 }
                 case "3":
                 {
-                    searchFlight(scanner,routes);
+                    List<List<Route>> flights = searchFlight(scanner,routes);
                     //metodo que compra
+                    buyFlight(scanner, flights, user);
                     break;
                 }
                 case "7":
@@ -190,9 +188,45 @@ public class AirlineSystemController
             }
         }
         while(exit != true);
-    }    
+    }   
+    
+    private void buyFlight(Scanner scanner, List<List<Route>> flights, User user) 
+            throws InvalidFlightOptionException
+    {
+        int option;
+        
+        System.out.println("Escolha a opcao de voo ");
+        option = Integer.parseInt(scanner.nextLine());
+        
+        //verificar se opcao de fato existe
+        if (option < 1 || option > (flights.size() + 1))
+        {
+            throw new InvalidFlightOptionException();
+        }
+        
+        List<Route> selectedRoutes = flights.get(option - 1);
+        
+        //para cada rota escolhida, devo selecionar um assento
+        for (Route route : selectedRoutes)
+        {
+            Seat seat = selectAvailableSeat(route);
+        }
+        
+//        RouteFlight newRouteFlight = new RouteFlight()
+//        
+//        Flight newFlight = new Flight()
 
-    private void searchFlight(Scanner scanner, List<Route> routes) {
+        //Ao fim da selecao de assentos, calcular o preco baseado no preco do voo + acrescimo do assento
+    }
+    
+    private Seat selectAvailableSeat(Route route)
+    {
+        //TODO fazer logica metodo
+        return route.getAirplane().getSeats().get(0);
+    }
+
+    private List<List<Route>> searchFlight(Scanner scanner, List<Route> routes) 
+    {
         String origin;
         String destiny;
         String date;
@@ -230,7 +264,7 @@ public class AirlineSystemController
         List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,date,conexao,tempoMax,routes);
         
         //Exibir voos (que podem ser conjuntos de rotas)
-        int index = 0;
+        int index = 1;
         for (List<Route> listRoute : flights)
         {
             System.out.println("Opcao "+index);
@@ -239,5 +273,6 @@ public class AirlineSystemController
                 showRoute(route);
             }
         }
+        return flights;
     }
 }

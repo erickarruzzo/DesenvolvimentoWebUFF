@@ -11,7 +11,7 @@ public class Route
     private String destiny;
     private GregorianCalendar landTime;
     private GregorianCalendar flightTime;
-    private double priceFactor;//Should be multiplied by the weight of the Seat
+    private double price;//Should be multiplied by the weight of the Seat
     private Period duration;
     private boolean available;
     
@@ -24,6 +24,7 @@ public class Route
       this.flightTime = flightTime;
       this.available = true;
       this.airplane = airplane;
+      this.available = true;
       //this.expectedFlightDuration = Period.between(flightTime, landTime);
     }
 
@@ -79,12 +80,12 @@ public class Route
 
     public double getPriceFactor() 
     {
-        return priceFactor;
+        return price;
     }
 
-    public void setPriceFactor(double priceFactor) 
+    public void setPriceFactor(double price) 
     {
-        this.priceFactor = priceFactor;
+        this.price = price;
     }
 
     public Period getDuration() 

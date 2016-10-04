@@ -6,7 +6,11 @@
             <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/controller/AirlineSystemController.java</file>
             <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/persistence/SimulateDB.java</file>
             <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/model/valueobject/Order.java</file>
+            <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/login/Login.java</file>
+            <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/model/entity/airline/Route.java</file>
             <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/view/MainProgram.java</file>
+            <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/model/constants/Constants.java</file>
+            <file>file:/C:/Users/Henrique/Documents/NetBeansProjects/DesenvolvimentoWebUFF/src/airlinesystem/model/entity/user/User.java</file>
         </group>
     </open-files>
 </project-private>

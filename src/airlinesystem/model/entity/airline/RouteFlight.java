@@ -1,34 +1,33 @@
 package airlinesystem.model.entity.airline;
 
 import airlinesystem.model.entity.seat.Seat;
-import java.util.List;
 
 public class RouteFlight 
 {
-    private List<Route> routes;
+    private Route route;
     private Seat seat;
-    private int number;
+    private int id;
     
-    public RouteFlight(List<Route> routes, Seat seat, int number)
+    public RouteFlight(Route route, Seat seat, int id)
     {
-        this.routes = routes;
+        this.route = route;
         this.seat = seat;
-        this.number = number;
+        this.id = id;
     }
 
-    public List<Route> getRoutes() 
+    public Route getRoute() 
     {
-        return routes;
+        return this.route;
     }
 
-    public void setRoutes(List<Route> routes) 
+    public void setRoute(Route route) 
     {
-        this.routes = routes;
+        this.route = route;
     }
 
     public Seat getSeat() 
     {
-        return seat;
+        return this.seat;
     }
 
     public void setSeat(Seat seat) 
@@ -36,13 +35,13 @@ public class RouteFlight
         this.seat = seat;
     }
 
-    public int getNumber() 
+    public int getId() 
     {
-        return number;
+        return this.id;
     }
 
-    public void setNumber(int number) 
+    public void setId(int id) 
     {
-        this.number = number;
+        this.id = id;
     }
 }
