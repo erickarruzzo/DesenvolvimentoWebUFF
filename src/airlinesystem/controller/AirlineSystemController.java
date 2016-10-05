@@ -11,11 +11,14 @@ import airlinesystem.model.exception.InvalidFlightOptionException;
 import airlinesystem.model.exception.WrongPasswordException;
 import airlinesystem.model.exception.WrongUsernameException;
 import airlinesystem.persistence.SimulateDB;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class AirlineSystemController 
 {
+    SimulateDB database = new SimulateDB();
+    
     public void initLoginScreen()
     {
         boolean exit = false;
@@ -88,7 +91,7 @@ public class AirlineSystemController
         
         Login login = new Login(username, password);
         
-        return login.authenticate();
+        return login.authenticate(database);
     }
     
     public User createAccount(Scanner scanner)
@@ -98,7 +101,7 @@ public class AirlineSystemController
         System.out.println("Entre com sua senha");
         String password = scanner.nextLine();
         
-        return SimulateDB.createAccount(username, password);
+        return database.createAccount(username, password);
     }
     
     public static void showRoute(Route route)
@@ -126,7 +129,7 @@ public class AirlineSystemController
     {
         List<Route> routes; 
         
-        routes = SimulateDB.retrieveRoutes();
+        routes = database.retrieveRoutes();
            
         boolean exit = false;
         String input;
@@ -163,16 +166,30 @@ public class AirlineSystemController
                     boolean resp = scanner.nextLine().equals("s") ? true : false;
                     if(resp)
                     {
-                        //chama metodo que compra
-                        buyFlight(scanner, flights, user);
+                        try
+                        {
+                            //metodo que compra
+                            buyFlight(scanner, flights, user);
+                        }
+                        catch(InvalidFlightOptionException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
                     }
                     break;
                 }
                 case "3":
                 {
                     List<List<Route>> flights = searchFlight(scanner,routes);
-                    //metodo que compra
-                    buyFlight(scanner, flights, user);
+                    try
+                    {
+                        //metodo que compra
+                        buyFlight(scanner, flights, user);
+                    }
+                    catch(InvalidFlightOptionException e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 case "7":
@@ -190,6 +207,7 @@ public class AirlineSystemController
         while(exit != true);
     }   
     
+    //o ideal eh que rotas com todas as cadeiras ocupadas nao aparecam para o aluno
     private void buyFlight(Scanner scanner, List<List<Route>> flights, User user) 
             throws InvalidFlightOptionException
     {
@@ -209,7 +227,14 @@ public class AirlineSystemController
         //para cada rota escolhida, devo selecionar um assento
         for (Route route : selectedRoutes)
         {
-            Seat seat = selectAvailableSeat(route);
+            try
+            {
+                Seat seat = selectAvailableSeat(scanner, route);
+            }
+            catch (InvalidFlightOptionException e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
         
 //        RouteFlight newRouteFlight = new RouteFlight()
@@ -219,10 +244,70 @@ public class AirlineSystemController
         //Ao fim da selecao de assentos, calcular o preco baseado no preco do voo + acrescimo do assento
     }
     
-    private Seat selectAvailableSeat(Route route)
+    //esse metodo deve permitir sincronismo
+    //uma vez selecionado um, outro usuario nao pode selecionar o mesmo assento concomitantemente
+    private Seat selectAvailableSeat(Scanner scanner, Route route)
+            throws InvalidFlightOptionException
     {
-        //TODO fazer logica metodo
+        List<Seat> availableSeats = getAvailableSeats(route);
+        
+        //exibir opcoes de escolha
+        int index = 1;
+        for(Seat seat : availableSeats)
+        {
+            System.out.println("Opcao "+index);
+            System.out.print("Categoria do assento: ");
+            System.out.println(seat.getCategory());
+            System.out.print("Assento: ");
+            System.out.println(seat.getAirplaneSeat());
+        }
+        
+        int option;
+        
+        System.out.println("Escolha a opcao de assento ");
+        option = Integer.parseInt(scanner.nextLine());
+        
+        //verificar se opcao de fato existe
+        if (option < 1 || option > (availableSeats.size() + 1))
+        {
+            throw new InvalidFlightOptionException();
+        }
+        
         return route.getAirplane().getSeats().get(0);
+    }
+    
+    private List<Seat> getAvailableSeats(Route route)
+    {
+        List<Seat> availableSeats = new ArrayList<Seat>();
+        
+        for (Seat seat : route.getAirplane().getSeats())
+        {
+            //if it is available
+            if(isSeatAvailable(route, seat))
+            {
+                availableSeats.add(seat);
+            }
+        }
+        return availableSeats;
+    }
+    
+    private boolean isSeatAvailable(Route route, Seat seat)
+    {
+        // essa consulta ao consulta teria de trazer apenas os voos comprados para essa rota,
+        //e nao todos
+        List<Flight> flights = database.getBoughtFlights();
+        
+        for(Flight flight : flights)
+        {
+            for(RouteFlight routeFlight : flight.getRoutes())
+            {
+                if(routeFlight.getRoute().equals(route) && routeFlight.getSeat().equals(seat))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private List<List<Route>> searchFlight(Scanner scanner, List<Route> routes) 
@@ -239,7 +324,7 @@ public class AirlineSystemController
         System.out.println("Digite o destino");
         destiny = scanner.nextLine();
         
-        System.out.println("Digite o data pretendido do voo");
+        System.out.println("Digite a data pretendida do voo");
         date = scanner.nextLine();
         
         System.out.println("Considerar conexoes? s/n");
@@ -261,7 +346,7 @@ public class AirlineSystemController
             }
         }
         
-        List<List<Route>> flights = SimulateDB.getFlights(origin,destiny,date,conexao,tempoMax,routes);
+        List<List<Route>> flights = database.getRoutes(origin,destiny,date,conexao,tempoMax,routes);
         
         //Exibir voos (que podem ser conjuntos de rotas)
         int index = 1;

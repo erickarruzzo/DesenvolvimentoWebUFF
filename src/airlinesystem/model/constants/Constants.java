@@ -11,5 +11,6 @@ public class Constants
     public static final String WRONG_USERNAME = "O nome de usuario inserido esta incorreto ou nao existe";
     public static final String EXISTANT_USERNAME = "O nome de usuario inserido ja existe";
     
-    public static final String INVALID_FLIGHT_OPTION = "A opcao escolhido é invalida";
+    public static final String INVALID_FLIGHT_OPTION = "A opcao de voo escolhida é invalida";
+    public static final String INVALID_SEAT_OPTION = "A opcao de assento escolhida é invalida";
 }

@@ -30,9 +30,9 @@ public class Login
         this.time = new Date();
     }
     
-    public User authenticate()
+    public User authenticate(SimulateDB database)
     {
-        List<User> userList = SimulateDB.retrieveUsers();
+        List<User> userList = database.retrieveUsers();
         
         for(User user : userList)
         {
