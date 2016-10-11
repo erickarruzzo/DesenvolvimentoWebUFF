@@ -166,14 +166,22 @@ public class AirlineSystemController
                     boolean resp = scanner.nextLine().equals("s") ? true : false;
                     if(resp)
                     {
-                        try
+                        boolean leave = false;
+                        while(!leave)
                         {
-                            //metodo que compra
-                            buyFlight(scanner, flights, user);
-                        }
-                        catch(InvalidFlightOptionException e)
-                        {
-                            System.out.println(e.getMessage());
+                            try
+                            {
+                                //metodo que compra
+                                buyFlight(scanner, flights, user);
+                                System.out.println("Deseja realizar a compra de outro voo? y/n");
+                                leave = scanner.nextLine() == "y" ? true : false;
+                            }
+                            catch(InvalidFlightOptionException e)
+                            {
+                                System.out.println(e.getMessage());
+                                System.out.println("Deseja tentar realizar a compra de um voo novamente? y/n");
+                                leave = scanner.nextLine() == "y" ? true : false;
+                            }
                         }
                     }
                     break;
@@ -181,14 +189,22 @@ public class AirlineSystemController
                 case "3":
                 {
                     List<List<Route>> flights = searchFlight(scanner,routes);
-                    try
+                    boolean leave = false;
+                    while(!leave)
                     {
-                        //metodo que compra
-                        buyFlight(scanner, flights, user);
-                    }
-                    catch(InvalidFlightOptionException e)
-                    {
-                        System.out.println(e.getMessage());
+                        try
+                        {
+                            //metodo que compra
+                            buyFlight(scanner, flights, user);
+                            System.out.println("Deseja realizar a compra de outro voo? y/n");
+                            leave = scanner.nextLine() == "y" ? true : false;
+                        }
+                        catch(InvalidFlightOptionException e)
+                        {
+                            System.out.println(e.getMessage());
+                            System.out.println("Deseja tentar realizar a compra de um voo novamente? y/n");
+                            leave = scanner.nextLine() == "y" ? true : false;
+                        }
                     }
                     break;
                 }
@@ -227,13 +243,19 @@ public class AirlineSystemController
         //para cada rota escolhida, devo selecionar um assento
         for (Route route : selectedRoutes)
         {
-            try
+            boolean exit = false;
+            while(!exit)
             {
-                Seat seat = selectAvailableSeat(scanner, route);
-            }
-            catch (InvalidFlightOptionException e)
-            {
-                System.out.println(e.getMessage());
+                try
+                {
+                    Seat seat = selectAvailableSeat(scanner, route);
+                }
+                catch (InvalidFlightOptionException e)
+                {
+                    System.out.println(e.getMessage());
+                    System.out.println("Voce deseja escolher novamente? y/n");
+                    exit = scanner.nextLine() == "y" ? true : false;
+                }
             }
         }
         
